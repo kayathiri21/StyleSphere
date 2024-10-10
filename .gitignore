@@ -1,0 +1,42 @@
+# Python compiled files
+*.py[cod]
+__pycache__/
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+
+# Django stuff
+*.sqlite3
+*.log
+local_settings.py
+db.sqlite3
+media/
+staticfiles/
+node_modules/
+static/
+
+# Environments
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# IDE Specific
+.idea/
+.vscode/
+*.sublime-workspace
+*.sublime-project
+
+# OS Generated Files
+.DS_Store
+Thumbs.db
+
+# GitHub and GitLab settings
+.gitlab-ci.yml
+.github/
+
+# VS Code settings
+.vscode/

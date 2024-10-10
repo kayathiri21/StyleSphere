@@ -1,0 +1,328 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body %}
+<!-- Navbar Start -->
+<div class="container-fluid">
+    <div class="row border-top px-xl-5">
+        <div class="col-lg-3 d-none d-lg-block">
+            <a class="btn shadow-none d-flex align-items-center justify-content-between bg-primary text-white w-100"
+                data-bs-toggle="collapse" href="#navbar-vertical"
+                style="height: 65px; margin-top: -1px; padding: 0 30px;">
+                <h6 class="m-0">Categories</h6>
+                <i class="fa fa-angle-down text-dark"></i>
+            </a>
+            <nav class="collapse position-absolute navbar navbar-vertical navbar-light align-items-start p-0 border border-top-0 border-bottom-0 bg-light"
+                id="navbar-vertical" style="width: calc(100% - 30px); z-index: 1;">
+                <div class="navbar-nav w-100 overflow-hidden" style="height: 410px">
+                    {% for main_category in main_categories %}
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link" data-bs-toggle="dropdown">{{ main_category.name }}
+                            <i class="fa fa-angle-down float-right mt-1"></i>
+                        </a>
+                        <div class="dropdown-menu position-absolute bg-secondary border-0 rounded-0 w-100 m-0">
+                            {% for subcategory in main_category.subcategories.all %}
+                            <a href="{% url 'subcategory_products' subcategory.slug %}" class="dropdown-item">
+                                {{ subcategory.name }}
+                            </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </nav>
+        </div>
+        <div class="col-lg-9">
+            <nav class="navbar navbar-expand-lg bg-light navbar-light py-3 py-lg-0 px-0">
+                <a href="" class="text-decoration-none d-block d-lg-none">
+                    <h1 class="m-0 display-5 font-weight-semi-bold"><span
+                            class="text-primary font-weight-bold border px-3 mr-1">E</span>Shopper</h1>
+                </a>
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+                    <div class="navbar-nav mr-auto py-0">
+                        <a href="{% url 'home' %}" class="nav-item nav-link">Home</a>
+                        <a href="{% url 'shop' %}" class="nav-item nav-link active">Shop</a>
+                        <a href="{% url 'my_orders'%}" class="nav-item nav-link">My order</a>
+                        <a href="{% url 'contact' %}" class="nav-item nav-link">Contact</a>
+                    </div>
+                    <div class="navbar-nav ml-auto py-0">
+                        {% if user.is_authenticated %}
+                        <a href="#" class="nav-item nav-link">Welcome, {{ user.username }}</a>
+                        <a href="{% url 'logout' %}" class="nav-item nav-link">Logout</a>
+                        {% else %}
+                        <a href="{% url 'login' %}" class="nav-item nav-link">Login</a>
+                        <a href="{% url 'signup' %}" class="nav-item nav-link">Register</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+</div>
+<!-- Navbar End -->
+<!-- Page Header Start -->
+<div class="container-fluid bg-secondary mb-5">
+    <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
+        <h1 class="font-weight-semi-bold text-uppercase mb-3">Checkout</h1>
+        <div class="d-inline-flex">
+            <p class="m-0"><a href="">Home</a></p>
+            <p class="m-0 px-2">-</p>
+            <p class="m-0">Checkout</p>
+        </div>
+    </div>
+</div>
+<!-- Page Header End -->
+
+<!-- Checkout Start -->
+<div class="container-fluid pt-5">
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+    {% endif %}
+    <form id="payment-form" method="POST" action="{% url 'checkout' %}">
+        {% csrf_token %}
+
+        <div class="row px-xl-5">
+            <!-- Billing Address -->
+            <div class="col-lg-8">
+                <div class="mb-4">
+                    <h4 class="font-weight-semi-bold mb-4">Billing Address</h4>
+                    <div class="row">
+                        <div class="col-md-6 form-group">
+                            <label for="billing_first_name">First Name</label>
+                            <input class="form-control" type="text" id="billing_first_name" name="billing_first_name"
+                                placeholder="John" required>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label for="billing_last_name">Last Name</label>
+                            <input class="form-control" name="billing_last_name" id="billing_last_name" type="text"
+                                placeholder="Doe" required>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label for="billing_email">E-mail</label>
+                            <input class="form-control" name="billing_email" type="email"
+                                placeholder="example@email.com" id="billing_email" required>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label for="billing_phone">Mobile No</label>
+                            <input class="form-control" type="tel" id="billing_phone" name="billing_mobile"
+                                placeholder="+123 456 789" required pattern="\+?\d{10,15}">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label for="billing_address1">Address Line 1</label>
+                            <input class="form-control" id="billing_address1" name="billing_address_line1" type="text"
+                                placeholder="123 Street" required>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label for="billing_address2">Address Line 2</label>
+                            <input class="form-control" id="billing_address2" name="billing_address_line2" type="text"
+                                placeholder="Apt, Suite, etc." required>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label for="billing_country">Country</label>
+                            <input class="form-control" id="billing_country" name="billing_country" type="text"
+                                placeholder="USA" required>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label for="billing_city">City</label>
+                            <input class="form-control" id="billing_city" name="billing_city" type="text"
+                                placeholder="New York" required>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label for="billing_state">State</label>
+                            <input class="form-control" id="billing_state" name="billing_state" type="text"
+                                placeholder="New York" required>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label for="billing_zip">Pin Code</label>
+                            <input class="form-control" id="billing_zip" name="billing_zip_code" type="text"
+                                placeholder="123" required>
+                        </div>
+
+                        <div class="col-md-12 form-group">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="shipto">
+                                <label class="custom-control-label" for="shipto" data-bs-toggle="collapse"
+                                    data-bs-target="#shipping-address">Ship to
+                                    different address</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Shipping Address Collapse -->
+                <div class="collapse mb-4" id="shipping-address">
+                    <h4 class="font-weight-semi-bold mb-4">Shipping Address</h4>
+                    <div class="row">
+                        <div class="col-md-6 form-group">
+                            <label for="shipping_first_name">First Name</label>
+                            <input class="form-control" id="shipping_first_name" type="text" name="shipping_first_name"
+                                placeholder="John">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label for="shipping_last_name">Last Name</label>
+                            <input class="form-control" id="shipping_last_name" name="shipping_last_name" type="text"
+                                placeholder="Doe">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label for="shipping_email">E-mail</label>
+                            <input class="form-control" id="shipping_email" name="shipping_email" type="email"
+                                placeholder="example@email.com">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label for="shipping_phone">Mobile No</label>
+                            <input class="form-control" id="shipping_phone" type="tel" name="shipping_mobile"
+                                placeholder="+123 456 789" pattern="\+?\d{10,15}">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label for="shipping_address1">Address Line 1</label>
+                            <input class="form-control" id="shipping_address1" name="shipping_address_line1" type="text"
+                                placeholder="123 Street">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label for="shipping_address2">Address Line 2</label>
+                            <input class="form-control" id="shipping_address2" name="shipping_address_line2" type="text"
+                                placeholder="Apt, Suite, etc.">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label for="shipping_country">Country</label>
+                            <input class="form-control" id="shipping_country" name="shipping_country" type="text"
+                                placeholder="USA">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label for="shipping_city">City</label>
+                            <input class="form-control" id="shipping_city" name="shipping_city" type="text"
+                                placeholder="New York">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label for="shipping_state">State</label>
+                            <input id="shipping_state" class="form-control" name="shipping_state" type="text"
+                                placeholder="New York">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label for="shipping_zip">Pin Code</label>
+                            <input id="shipping_zip" class="form-control" name="shipping_zip_code" type="text"
+                                placeholder="123">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card border-secondary mb-5">
+                    <div class="card-header bg-secondary border-0">
+                        <h4 class="font-weight-semi-bold m-0">Order Total</h4>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="font-weight-medium mb-3">Products</h5>
+
+                        {% for item in products %}
+                        <div class="d-flex justify-content-between">
+                            <p>{{ item.product.name }}</p>
+                            <p>₹{{ item.total_price }}</p>
+                        </div>
+                        {% endfor %}
+
+                        <hr class="mt-0">
+                        <div class="d-flex justify-content-between mb-3 pt-1">
+                            <h6 class="font-weight-medium">Subtotal</h6>
+                            <h6 class="font-weight-medium">₹{{ total_price }}</h6>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <h6 class="font-weight-medium">Shipping</h6>
+                            <h6 class="font-weight-medium">₹{{shipping_cost}}</h6>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <h6 class="font-weight-medium">GST</h6>
+                            <h6 class="font-weight-medium">₹{{gst_amount}}</h6>
+                        </div>
+                    </div>
+                    <div class="card-footer border-secondary bg-transparent">
+                        <div class="d-flex justify-content-between mt-2">
+                            <h5 class="font-weight-bold">Total (including shipping & GST)</h5>
+                            <h5 class="font-weight-bold">₹{{total_amount_with_gst}}</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="card border-secondary mb-5">
+                    <div class="card-header bg-secondary border-0">
+                        <h4 class="font-weight-semi-bold m-0">Payment</h4>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="form-group">
+                            <div class="custom-control custom-radio">
+                                <input class="custom-control-input" type="radio" name="payment_method" id="cod"
+                                    value="cod" checked>
+                                <label class="custom-control-label" for="cod">Cash on Delivery</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="custom-control custom-radio">
+                                <input class="custom-control-input" type="radio" name="payment_method" id="card"
+                                    value="card">
+                                <label class="custom-control-label" for="card">Credit/Debit Card</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer border-secondary bg-transparent">
+
+                        <button class="btn btn-lg btn-block btn-primary font-weight-bold my-3 py-3" type="submit"
+                            id="pay-button">Place
+                            Order</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+</div>
+</div>
+{% if payment and payment_method == 'card' %}
+<!-- Razorpay Checkout Handler -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+    window.onload = function () {
+        var paymentMethod = "{{ payment_method }}";
+        console.log("Payment Method:", paymentMethod); // Debugging line
+        if (paymentMethod === 'card') {
+            var options = {
+                "key": "{{ settings.RAZORPAY_TEST_KEY_ID }}", // Enter your Razorpay Key ID here
+                "amount": "{{ razorpay_order_amount }}", // Amount in paise (multiply INR by 100)
+                "currency": "INR",
+                "name": "StyleSphere",
+                "description": "Order :{{order.id}}",
+                "image": "https://your-logo-url.com/logo.png", // Add your logo here
+                "order_id": "{{razorpay_order_id}}", // Razorpay Order ID
+                handler: function (response) {
+                    console.log("Payment successful:", response); // Debugging line
+                    // Redirect to payment success URL with payment_id, razorpay_signature, and razorpay_order_id
+                    window.location.href = "{% url 'payment_success' %}?payment_id=" + response.razorpay_payment_id + "&razorpay_signature=" + response.razorpay_signature + "&razorpay_order_id=" + response.razorpay_order_id;
+                },
+
+                "prefill": {
+                    "name": "{{ billing_first_name }} {{ billing_last_name }}",  // User's name from context
+                    "email": "{{ billing_email }}",
+                    "contact": "{{ billing_mobile }}"
+                },
+                "theme": {
+                    "color": "#3399cc"
+                },
+
+            };
+
+
+            var rzp1 = new Razorpay(options);
+            rzp1.open();
+        }
+    }
+        ;
+</script>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+
+
+{% block body%}
+<!-- Navbar Start -->
+<div class="container-fluid">
+    <div class="row border-top px-xl-5">
+
+        <div class="col-lg-9">
+            <nav class="navbar navbar-expand-lg bg-light navbar-light py-3 py-lg-0 px-0">
+                <a href="" class="text-decoration-none d-block d-lg-none">
+                    <h1 class="m-0 display-5 font-weight-semi-bold"><span
+                            class="text-primary font-weight-bold border px-3 mr-1">Style</span>Sphere</h1>
+                </a>
+                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+                    <div class="navbar-nav mr-auto py-0">
+                        <a href="{% url 'home'%}" class="nav-item nav-link">Home</a>
+                        <a href="{% url 'shop'%}" class="nav-item nav-link active">Shop</a>
+
+
+                        <a href="{% url 'contact'%}" class="nav-item nav-link">Contact</a>
+                    </div>
+                </div>
+        </div>
+
+    </div>
+    </nav>
+</div>
+</div>
+</div>
+<!-- Navbar End -->
+
+<!-- Signup Start -->
+<div class="container-fluid d-flex justify-content-center align-items-center vh-100">
+    <div class="col-lg-5">
+        <div class="text-center mb-4">
+            <h2 class="section-title px-5"><span class="px-2">Create an Account</span></h2>
+        </div>
+        <div class="signup-form">
+            <form method="POST" novalidate>
+                {% csrf_token %}
+                {{ form.non_field_errors }} <!-- Display non-field errors here if any -->
+                <div class="control-group mb-3">
+                    {{ form.username.label_tag }}
+                    {{ form.username }} <!-- Render username field -->
+                    {{ form.username.errors }} <!-- Display errors if any -->
+                </div>
+                <div class="control-group mb-3">
+                    {{ form.email.label_tag }}
+                    {{ form.email }} <!-- Render email field -->
+                    {{ form.email.errors }} <!-- Display errors if any -->
+                </div>
+                <div class="control-group mb-3">
+                    {{ form.password1.label_tag }}
+                    {{ form.password1 }} <!-- Render password1 field -->
+                    {{ form.password1.errors }} <!-- Display errors if any -->
+                </div>
+                <div class="control-group mb-3">
+                    {{ form.password2.label_tag }}
+                    {{ form.password2 }} <!-- Render password2 field -->
+                    {{ form.password2.errors }} <!-- Display errors if any -->
+                </div>
+                <div>
+                    <button class="btn btn-primary py-2 px-4 w-100" type="submit">Create Account</button>
+                </div>
+            </form>
+            <div class="text-center mt-3">
+                <p>Already have an account? <a href="{% url 'login' %}">Login</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Signup End -->
+</div>
+<!-- Signup End -->
+{% endblock %}

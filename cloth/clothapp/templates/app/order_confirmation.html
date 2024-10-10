@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body %}
+<!-- Full-screen overlay for Order Confirmation -->
+<div class="confirmation-container">
+    <div class="confirmation-popup">
+        <h2 class="card-title">Thank You for Your Order!</h2>
+        <p class="card-text">Your order #{{ order.id }} has been placed successfully.</p>
+        <p class="card-text">We've sent a confirmation email to <strong>{{ order.billing_email }}</strong>.</p>
+        <a href="{% url 'home' %}" class="btn btn-primary mt-3">Continue Shopping</a>
+    </div>
+</div>
+
+<!-- Optional: Display Order Details -->
+<div class="order-details container mt-5">
+    <h3>Order Details</h3>
+    <ul class="list-group">
+        {% for item in order.orderitem_set.all %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            <span>{{ item.product.name }}</span>
+            <span>Quantity: {{ item.quantity }}</span>
+            <span>Price: ₹{{ item.product.price }}</span>
+        </li>
+        {% endfor %}
+    </ul>
+    <p class="mt-3"><strong>Total Amount:</strong> ₹{{ order.total_amount }}</p>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const confirmationContainer = document.querySelector('.confirmation-container');
+
+        // Show the confirmation pop-up with a slight delay
+        setTimeout(() => {
+            confirmationContainer.classList.add('show');
+        }, 100); // Delay to ensure CSS transitions
+
+        // Hide the pop-up when the user clicks outside of it
+        confirmationContainer.addEventListener('click', function (e) {
+            if (e.target === confirmationContainer) {
+                confirmationContainer.classList.remove('show');
+                // Redirect to home after closing
+                setTimeout(() => {
+                    window.location.href = '{% url "home" %}';
+                }, 500);
+            }
+        });
+    });
+</script>
+{% endblock %}

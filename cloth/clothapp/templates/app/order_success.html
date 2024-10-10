@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body %}
+<!-- Order Confirmation Section -->
+<div class="confirmation-container d-flex justify-content-center align-items-center vh-100">
+    <div class="confirmation-popup card p-4 shadow">
+        <div class="card-body text-center">
+            <h2 class="card-title">Thank You for Your Order!</h2>
+            <p class="card-text">Your order #{{ order.id }} has been placed successfully.</p>
+            <p class="card-text">We've sent a confirmation email to <strong>{{ order.billing_email }}</strong>.</p>
+            <a href="{% url 'home' %}" class="btn btn-primary mt-3">Continue Shopping</a>
+        </div>
+    </div>
+</div>
+
+<!-- Optional: Display Order Details -->
+<div class="order-details container mt-5">
+    <h3>Order Details</h3>
+    <ul class="list-group">
+        {% for item in order.orderitem_set.all %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            <span>{{ item.product.name }}</span>
+            <span>Quantity: {{ item.quantity }}</span>
+            <span>Price: Rs{{ item.product.price }}</span>
+        </li>
+        {% endfor %}
+    </ul>
+    <p class="mt-3"><strong>Total Amount:</strong> Rs{{ order.total_amount }}</p>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<!-- Include any additional JS here -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const confirmationContainer = document.querySelector('.confirmation-container');
+
+        // Show the confirmation pop-up with a slight delay
+        setTimeout(() => {
+            confirmationContainer.classList.add('show');
+        }, 100); // Delay to ensure CSS transitions
+
+        // Optional: Hide the pop-up when user clicks outside of it
+        confirmationContainer.addEventListener('click', function (e) {
+            if (e.target === confirmationContainer) {
+                confirmationContainer.classList.remove('show');
+                // Optionally, redirect to home after closing
+                setTimeout(() => {
+                    window.location.href = '{% url "home" %}';
+                }, 500);
+            }
+        });
+    });
+</script>
+{% endblock %}

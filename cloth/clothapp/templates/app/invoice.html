@@ -1,0 +1,155 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>StyleSphere</title>
+    <style>
+        .invoice-box {
+            max-width: 800px;
+            margin: auto;
+            padding: 30px;
+            border: 1px solid #eee;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+            font-size: 16px;
+            line-height: 24px;
+            font-family: 'Helvetica Neue', 'Helvetica', sans-serif;
+            color: #555;
+        }
+
+        .invoice-box table {
+            width: 100%;
+            line-height: inherit;
+            text-align: left;
+        }
+
+        .invoice-box table td {
+            padding: 5px;
+            vertical-align: top;
+        }
+
+        .invoice-box table tr.heading td {
+            background: #eee;
+            border-bottom: 1px solid #ddd;
+            font-weight: bold;
+        }
+
+        .invoice-box table tr.item td {
+            border-bottom: 1px solid #eee;
+        }
+
+        .invoice-box table tr.total td {
+            border-top: 2px solid #eee;
+            font-weight: bold;
+        }
+
+        .note {
+            text-align: center;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <div class="container mt-5">
+        <div class="invoice-box">
+            <table cellpadding="0" cellspacing="0">
+                <tr class="top">
+                    <td colspan="5">
+                        <table>
+                            <tr>
+                                <td class="title">
+                                    <h2>StyleSphere</h2>
+                                </td>
+
+                                <td>
+                                    Invoice #: {{ order.id }}<br>
+                                    Created: {{ order.created_at|date:"D d M Y" }}<br>
+                                    Payment ID: {{ order.razorpay_payment_id }}
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+
+                <tr class="information">
+                    <td colspan="5">
+                        <table>
+                            <tr>
+                                <td>
+                                    <strong>Billing Address:</strong><br>
+                                    {{ order.billing_address_line1 }} {{ order.billing_address_line2 }}<br>
+                                    {{ order.billing_city }}, {{ order.billing_state }} -
+                                    {{order.billing_zip_code}}<br>
+                                    {{ order.billing_country }}<br>
+                                    Email: {{ order.billing_email }}<br>
+                                    Phone: {{ order.billing_mobile }}
+                                </td>
+
+                                <td>
+                                    <strong>Shipping Address:</strong><br>
+                                    {{ order.shipping_address_line1 }} {{ order.shipping_address_line2 }}<br>
+                                    {{ order.shipping_city }}, {{ order.shipping_state }} -
+                                    {{order.shipping_zip_code}}<br>
+                                    {{ order.shipping_country }}<br>
+                                    Email: {{ order.shipping_email }}<br>
+                                    Phone: {{ order.shipping_mobile }}
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+
+                <tr class="heading">
+                    <td>#</td>
+                    <td>Item</td>
+                    <td>size</td>
+                    <td>color</td>
+                    <td>Quantity</td>
+                    <td>Unit Price</td>
+
+                    <td>Total</td>
+                </tr>
+
+                {% for item in order_items %}
+                <tr class="item">
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ item.product.name }}</td>
+                    <td>{{item.selected_size}}</td>
+                    <td>{{item.selected_color}}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>₹{{ item.product.get_discounted_price|floatformat:2 }}</td>
+                    <td>₹{{ total_amount|floatformat:2 }}</td>
+                </tr>
+                {% endfor %}
+
+                <tr class="total">
+                    <td colspan="4">GST:</td>
+                    <td>₹{{ gst_amount }}</td>
+                </tr>
+                <tr class="total">
+                    <td colspan="4">Shipping Charge:</td>
+                    <td>₹{{ shipping_cost }}</td>
+                </tr>
+                <tr class="total">
+                    <td colspan="4">Total Amount:</td>
+                    <td>₹{{ total_amount_with_gst }}</td>
+                </tr>
+            </table>
+
+            <div class="note">
+                <p>Thank you for your purchase!</p>
+            </div>
+            <a href="{% url 'home' %}" class="btn btn-primary btn-lg mt-4"
+                style="border-radius: 30px; padding: 10px 30px; background-color: #007bff; color: #fff; text-transform: uppercase;text-decoration: none; font-weight: bold;">
+                Continue Shopping
+            </a>
+        </div>
+    </div>
+</body>
+
+</html>
