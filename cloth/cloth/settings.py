@@ -121,16 +121,16 @@ STATIC_URL = 'static/'
 STATIC_ROOT=os.path.join(BASE_DIR,'static')
 MEDIA_URL = 'media/'
 MEDIA_ROOT=os.path.join(BASE_DIR,'media')
-DEFAULT_FROM_EMAIL = 'www.s.kayathiri1998@gmail.com'
+DEFAULT_FROM_EMAIL = ''#Your email address
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'  # e.g., 'smtp.gmail.com' for Gmail
 EMAIL_PORT = 587  # Port for email service
 EMAIL_USE_TLS = True  # TLS (Transport Layer Security) protocol
-EMAIL_HOST_USER = 'www.s.kayathiri1998@gmail.com'  # Your email address
-EMAIL_HOST_PASSWORD = 'roqp gjur hcld itnx'
+EMAIL_HOST_USER = ''  # Your email address
+EMAIL_HOST_PASSWORD = ''#Your email password
 LOGIN_REDIRECT_URL = '/'
-RAZORPAY_TEST_KEY_ID  = 'rzp_test_qyZcSpJLsTwPfv'
-RAZORPAY_TEST_KEY_SECRET = 'nHCLZ6fgoxzvYphzZSdgjTK0'
+RAZORPAY_TEST_KEY_ID  = ''#Your keyid
+RAZORPAY_TEST_KEY_SECRET = ''#Your key secert
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
